@@ -19,3 +19,12 @@ def create_user():
 def get_users():
     users = User.query.all()
     return jsonify([user.to_dict() for user in users])
+
+@user_bp.route('/<int:id>',methods=['GET'])
+def getUserById(id):
+    user=User.query.filter_by(id=id).first()
+    if user:
+        return jsonify(user.to_dict()), 200  
+    else:
+        return jsonify({"message": "User not found"}), 404
+    
