@@ -1,12 +1,17 @@
 from flask import Blueprint, jsonify, request
 from ..models import User
 from ..extensions import db
+from ..validation.user_validation import UserSchema
 
 user_bp = Blueprint('user_bp', __name__, url_prefix='/api/v1/users')
 
 @user_bp.route('/', methods=['POST'])
 def create_user():
     data = request.get_json()
+    user_schema = UserSchema()
+    errors=user_schema.validate(data)
+    if errors:
+        return jsonify(errors),400
     new_user = User(firstName=data['firstName'],
                      lastName=data['lastName'],
                      email=data['email'],
