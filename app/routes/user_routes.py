@@ -28,3 +28,12 @@ def getUserById(id):
     else:
         return jsonify({"message": "User not found"}), 404
     
+@user_bp.route('/<int:id>',methods=['DELETE'])
+def deleteUser(id):
+    user=User.query.filter_by(id=id).first()
+    if(user):
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({"message":"User deleted with successufly"}),204
+    else:
+        return jsonify({"message":"cet utilisateur n'existe pas"}),404
